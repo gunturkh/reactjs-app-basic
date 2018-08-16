@@ -3,8 +3,15 @@ import logo from './logo.svg'
 import './App.css'
 
 class App extends Component {
+  
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   handleClick(){
     alert('Clicked')
+    // this.add()
   }
   render() {
     return (
