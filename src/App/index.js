@@ -13,6 +13,7 @@ class App extends Component {
       items: []
     }
     this.addItem = this.addItem.bind(this)
+    this.deleteItem = this.deleteItem.bind(this)
   }
 
   addItem(e) {
@@ -31,6 +32,16 @@ class App extends Component {
     }
     e.preventDefault()
   }
+  deleteItem(key) {
+    let filteredItems =this.state.items.filter(function (item) {
+      return (item.key !== key)
+    })
+
+    this.setState({
+      items: filteredItems
+    })
+  }
+
   handleChange(event) {
     this.setState({
       text: event.target.value
@@ -47,7 +58,7 @@ class App extends Component {
           <input ref={(a) => this._inputElement = a} placeholder="Enter Task"></input>
           <button type="submit">Add</button>
         </form>
-        <TodoItems entries = {this.state.items}/>
+        <TodoItems entries = {this.state.items} delete = {this.deleteItem}/>
       </div>
     )
   }
