@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import TodoItems from '../TodoItems'
 import InputText from '../InputText'
 import logo from '../Logo/logo.svg'
 import './index.css'
@@ -13,25 +14,21 @@ class App extends Component {
     }
     this.addItem = this.addItem.bind(this)
   }
+
   addItem(e) {
-    if (this._inputElement.value !== '')
-    {
-      var newItem = {
+    if (this._inputElement.value !== '') {
+      let newItem = {
         text: this._inputElement.value,
         key: Date.now()
       }
-    
-
-      this.setState((prevState)=> {
-        return {
-          items: prevState.items.concat(newItem)
+ 
+      this.setState((prevState) => {
+        return { 
+          items: prevState.items.concat(newItem) 
         }
       })
-
       this._inputElement.value = ''
     }
-    console.log(this.state.items)
-    
     e.preventDefault()
   }
   handleChange(event) {
@@ -50,8 +47,7 @@ class App extends Component {
           <input ref={(a) => this._inputElement = a} placeholder="Enter Task"></input>
           <button type="submit">Add</button>
         </form>
-        
-        <InputText />
+        <TodoItems entries = {this.state.items}/>
       </div>
     )
   }
