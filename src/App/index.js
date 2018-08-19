@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import TodoItems from '../TodoItems'
-import InputText from '../InputText'
-import logo from '../Logo/logo.svg'
-import './index.css'
+import logo from '../Logo/solido.png'
+import './TodoList.css'
 
 class App extends Component {
   
@@ -52,12 +51,12 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">SOLIDO</h1>
+          <h1 className="App-title"></h1>
+          <form onSubmit={this.addItem}>
+            <input ref={(a) => this._inputElement = a} placeholder="Enter Task"></input>
+            <button type="submit">Add</button>
+          </form>
         </header>
-        <form onSubmit={this.addItem}>
-          <input ref={(a) => this._inputElement = a} placeholder="Enter Task"></input>
-          <button type="submit">Add</button>
-        </form>
         <TodoItems entries = {this.state.items} delete = {this.deleteItem}/>
       </div>
     )
