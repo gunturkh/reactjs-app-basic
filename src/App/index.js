@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import TodoItems from '../TodoItems'
+import ButtonModern from '../ButtonModern'
 import logo from '../Logo/solido.png'
 import './TodoList.css'
+
+const URL = 'https://learn-heroku-deploy.herokuapp.com/'
 
 class App extends Component {
   
@@ -14,20 +17,50 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.addItem = this.addItem.bind(this)
     this.deleteItem = this.deleteItem.bind(this)
+    this.postItem = this.postItem.bind(this)
   }
   
 
   handleSubmit(e){
     if (this._inputElement.value !== '') {
-      let newItem = {
-        text: this._inputElement.value,
-        key: Date.now()
-      }
-      this.addItem(newItem)
+      this.postItem()
       this._inputElement.value = ''
     }
     e.preventDefault()
   }
+  
+  postItem() {
+    fetch(`${URL}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        todo_task: this._inputElement.value
+      })
+    })
+      .then(res => res.json())
+      .catch(error => console.error('Error:', error))
+      .then(response => {
+        fetch(`${URL}`)
+          .then(results => {
+            return results.json()
+          })
+          .then(data => {
+            const newData = data.todo_lists
+            const newId = newData[newData.length-1].id
+            const newTask = newData[newData.length-1].todo_task
+            let newItem = {
+              text: newTask,
+              key: newId
+            }
+            this.addItem(newItem)
+          })
+      })
+  }
+
+  
 
   addItem(item) {
     this.setState((prevState) => {
@@ -35,8 +68,6 @@ class App extends Component {
         items: prevState.items.concat(item) 
       }
     })
-    
-    
   }
 
 
@@ -46,14 +77,15 @@ class App extends Component {
       return (item.key !== key)
     })
 
+    fetch(`https://learn-heroku-deploy.herokuapp.com/${key}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
     this.setState({
       items: filteredItems
-    })
-  }
-
-  handleChange(event) {
-    this.setState({
-      text: event.target.value
     })
   }
 
@@ -62,10 +94,9 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title"></h1>
           <form onSubmit={this.handleSubmit}>
             <input ref={(a) => this._inputElement = a} placeholder="Enter Task"></input>
-            <button type="submit">Add</button>
+            <ButtonModern name={'Add'}/>
           </form>
         </header>
         <TodoItems entries = {this.state.items} delete = {this.deleteItem} addItem = {this.addItem}/>

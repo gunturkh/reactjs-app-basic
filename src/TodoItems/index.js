@@ -1,6 +1,8 @@
 import React from 'react'
 import FlipMove from 'react-flip-move'
 
+const URL = 'https://learn-heroku-deploy.herokuapp.com/'
+
 class TodoItems extends React.Component {
   constructor(props) {
     super(props)
@@ -9,12 +11,16 @@ class TodoItems extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://learn-heroku-deploy.herokuapp.com/')
+    this.getItem()
+  }
+
+  getItem() {
+    fetch(URL)
       .then(results => {
         return results.json()
       })
-      .then (data => {
-        data.todo_lists.forEach( item => {
+      .then(data => {
+        data.todo_lists.forEach(item => {
           this.props.addItem({
             text: item.todo_task,
             key: item.id
@@ -26,9 +32,23 @@ class TodoItems extends React.Component {
   delete (key) {
     this.props.delete(key)
   }
-  
+
+  updateTask (id) {
+
+    fetch(`${URL}${id}`, {
+      method: 'PUT', // or 'PUT'
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        todo_task: this._inputElement.value
+      })
+    })
+  }
+
   createTasks (item) {
-    return <li onClick={() => this.delete(item.key)} key = {item.key}>{item.text}</li>
+    return <li onDoubleClick={() => this.delete(item.key)} key = {item.key}>{item.text}</li>
   }
 
   render () {
@@ -41,7 +61,6 @@ class TodoItems extends React.Component {
           {listItems}
         </FlipMove>
       </ul>
-
     )
   }
 }
